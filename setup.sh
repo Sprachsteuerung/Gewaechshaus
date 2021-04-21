@@ -34,6 +34,7 @@ sudo curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
 sudo apt-get install influxdb -y
 sudo systemctl start influxd
 sudo systemctl enable influxd
+python3 -m pip install influxdb
 
 #grafana (localhost:3000)
 
