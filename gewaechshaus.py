@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 import time, os, sys                                                    #Importierte Betriebssystem, Sys und Zeit                                        
-import board                                                            #Importiere Board Modul notwendig für adafriut
+import board                                                            #importiere Board Modul notwendig für adafriut
 import adafruit_dht                                                     #Adafruit Bibiliothek für den DHT Sensor
 import Adafruit_ADS1x15                                                 #Adafruit Bibiliothek für den AD-Wandler
-from gpiozero import LED, Button                                        #Von dem Modul GPIOZERO lade die Funktion LED und Button   
-from time import sleep                                                  #Von dem Modul Time lade die Funktion sleep  
+from gpiozero import LED, Button                                        #von dem Modul GPIOZERO lade die Funktion LED und Button   
+from time import sleep                                                  #von dem Modul Time lade die Funktion sleep  
 import pigpio                                                           #Bibiliothek zum gezielten steuern der GPIOs präzises Timing und PWM  
-import busio                                                            #Benötigt Adafruit zum benutzung verschiedener Protokolle
-import adafruit_ads1x15.ads1115 as ADS                                  #Von dem Modul adafruit_ads1x15.ads1115 lade die Funktion ADS
-from adafruit_ads1x15.analog_in import AnalogIn                         #Funktion AnalogIn um die Analogen Werte des AD-Wanlders zu erfassen
-import RPi.GPIO as GPIO                                                 #Bibiliothek zum steuern der GPIOS                      
-from influxdb import InfluxDBClient                                     #Importiere das Modul InfluxDatenbank
-from datetime import datetime                                           #Importiere das Datum
+import busio                                                            #benötigt Adafruit zur Benutzung verschiedener Protokolle
+import adafruit_ads1x15.ads1115 as ADS                                  #von dem Modul adafruit_ads1x15.ads1115 lade die Funktion ADS
+from adafruit_ads1x15.analog_in import AnalogIn                         #Funktion AnalogIn, um die Analogen Werte des AD-Wanlders zu erfassen
+import RPi.GPIO as GPIO                                                 #Bibiliothek zum Steuern der GPIOS                      
+from influxdb import InfluxDBClient                                     #importiere das Modul InfluxDatenbank
+from datetime import datetime                                           #importiere das Datum
 
 #DHT22       Definieren
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -49,7 +49,7 @@ print("\033[0;32m...::: initialized :::...\033[0m")
 def aktuelleTemperatur1():	                                        #Definieren des Erdtemperatursensors1
 
     #1-wire Slave Datei lesen
-    file = open('/sys/bus/w1/devices/28-01204fd35bbe/w1_slave')         #Textdatei Ordner aus dem die daten ausgelesen werden
+    file = open('/sys/bus/w1/devices/28-01204fd35bbe/w1_slave')         #Textdatei Ordner aus dem die Daten ausgelesen werden
     filecontent = file.read()
     file.close()
  
@@ -64,7 +64,7 @@ def aktuelleTemperatur1():	                                        #Definieren d
 def aktuelleTemperatur2():	                                        #Definieren der Erdtemperatursensors1
       
     #1-wire Slave Datei lesen
-    file = open('/sys/bus/w1/devices/28-01204fc85c90/w1_slave')         #Textdatei Ordner aus dem die daten ausgelesen werden
+    file = open('/sys/bus/w1/devices/28-01204fc85c90/w1_slave')         #Textdatei Ordner aus dem die Daten ausgelesen werden
     filecontent = file.read()
     file.close()
  
@@ -88,9 +88,9 @@ def Erdfeuchtigkeit1():                                                 #Definie
 	chan = AnalogIn(ads, ADS.P0)                                    #ADS.P0 Analogwerte des Pins 0 am AD-Wandler auslesen
 	Erdfeuchtigkeit = (round(100-(chan.value-29040)/((30592-29040)/100),1))#Umrechnung der Bits Min/Max in % mit der Funktion Round gerundet
 	
-	if Erdfeuchtigkeit < 1:                                         #Wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
+	if Erdfeuchtigkeit < 1:                                         #wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
 		return (1.0)
-	if Erdfeuchtigkeit > 100:                                       #Wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
+	if Erdfeuchtigkeit > 100:                                       #wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
 		return (100.0)
 	else:	
 		return(Erdfeuchtigkeit)
@@ -99,9 +99,9 @@ def Erdfeuchtigkeit2():                                                 #Definie
 	chan = AnalogIn(ads, ADS.P2)                                    #ADS.P2 Analogwerte des Pins 2 am AD-Wandler auslesen
 	Erdfeuchtigkeit = (round(100-(chan.value-29040)/((30592-29040)/100),1))#Umrechnung der Bits Min/Max in % mit der Funktion Round gerundet
 		
-	if Erdfeuchtigkeit < 1:                                         #Wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
+	if Erdfeuchtigkeit < 1:                                         #wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
 		return (1.0)
-	if Erdfeuchtigkeit > 100:                                       #Wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
+	if Erdfeuchtigkeit > 100:                                       #wenn durch Spannungsschwankungen Wert unter 1 ist trotzdem 1 anzeigen
 		return (100.0)
 	else:	
 		return(Erdfeuchtigkeit)
@@ -111,7 +111,7 @@ while True:
     try:
 	
        
-        now = datetime.now()						 #Aktuele Uhrzeit
+        now = datetime.now()						 #aktuelle Uhrzeit
         current_time = now.strftime("%H:%M:%S")				 #Formatiere die aktuelle Uhrzeit
 	#Anzeigen der Werte
         print("Aktuelle Uhrzeit:", current_time)
@@ -123,25 +123,25 @@ while True:
         print("Erdfeuchtigkeit2:       ", Erdfeuchtigkeit2(), " %")
         
         #Regelung des Gewächshauses
-        if float(aktuelleTemperatur1()) < 18.2:                         #Wenn Temperatur1 unter 10°C Dann Heize
+        if float(aktuelleTemperatur1()) < 18.2:                         #wenn Temperatur1 unter 10°C, dann heize
             Heizmatte.off()
             print("Heizmatte an")
-        if float(aktuelleTemperatur1()) > 20:                           #Wenn Temperatur1 über 13°C Dann Heize nicht
+        if float(aktuelleTemperatur1()) > 20:                           #wenn Temperatur1 über 13°C, dann heize nicht
             Heizmatte.on()
             print("Heizmatte aus")
-        if float(Erdfeuchtigkeit1()) < 50:                              #Wenn Erdfeuchtigkeit1 unter 50% dann gieße 5 sekundden
+        if float(Erdfeuchtigkeit1()) < 50:                              #wenn Erdfeuchtigkeit1 unter 50%, dann gieße 5 Sek.
             Bewaesserungspumpe1.off()
             print("Bewässerung Pumpe1")
             time.sleep(5.0)
             Bewaesserungspumpe1.on()
-        if float(Erdfeuchtigkeit2()) < 50:                              #Wenn Erdfeuchtigkeit2 unter 50% dann gieße 5 sekundden
+        if float(Erdfeuchtigkeit2()) < 50:                              #Wenn Erdfeuchtigkeit2 unter 50% dann gieße 5 Sek.
             Bewaesserungspumpe2.off()
             print("Bewässerung Pumpe2")
             time.sleep(5.0)
             Bewaesserungspumpe2.on()
-        if float(Lufttemperatur()) > 21:                                #Wenn Lufttemperatur über 19°C dann Lüfte das Gewächshaus
+        if float(Lufttemperatur()) > 21:                                #wenn Lufttemperatur über 19°C, dann Lüfte das Gewächshaus
             Luefter.off()	    
-        if float(Lufttemperatur()) > 17:                                #Wenn Lufttemperatur unter 17°C dann Lüfte das Gewächshaus nicht
+        if float(Lufttemperatur()) > 17:                                #wenn Lufttemperatur unter 17°C, dann Lüfte das Gewächshaus nicht
             Luefter.on()  
 
         iso = time.ctime()
@@ -163,12 +163,12 @@ while True:
               }
           }
         ]
-        client.write_points(data)                                      #senden der JSON daten an die InfluxDX 
-        time.sleep(interval)                                           #pause bis zum nächsten schleifen durchlauf
+        client.write_points(data)                                      #senden der JSON Daten an die InfluxDX 
+        time.sleep(interval)                                           #Pause bis zum nächsten Schleifendurchlauf
              
                   
     except RuntimeError as error:
-        print(error.args[0])                                           #Fehler treten ziemlich oft auf, DHTs sind schwer zu lesen, einfach lauffen lassen
+        print(error.args[0])                                           #Fehler treten ziemlich oft auf, DHTs sind schwer zu lesen, einfach laufen lassen
         time.sleep(5.0)
         continue
     except Exception as error:
@@ -178,4 +178,4 @@ while True:
         
 
  
-
+© 2021 GitHub, Inc.
